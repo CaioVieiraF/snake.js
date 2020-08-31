@@ -3,10 +3,24 @@ body {
     background-color: #242734;
 }
 
+main {
+    display: flex;
+    justify-content: center;
+}
+
 canvas {
-    display: block;
     background-color: #aaa;
     border-radius: 0.4rem;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
-    margin: auto;
+}
+
+span#points {
+    background: #888;
+    font: 4rem Arial;
+    color: #111;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.6);
 }

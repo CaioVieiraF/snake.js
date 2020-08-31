@@ -3,6 +3,8 @@
 const canvas = document.querySelector('canvas');
 const screen = canvas.getContext("2d");
 
+const score = document.getElementById("points");
+
 // set the grid's square size and declare the positions
 const pixel = 20;
 let gridPos = [];
@@ -53,7 +55,6 @@ function main() {
     }
 
     window.addEventListener('keydown', event => {
-        console.log(event.key);
         handleKeyDown(event, snake);
     });
 
@@ -106,6 +107,7 @@ function renderScreen( snake, show ) {
 
     renderGrid(show);
     renderSnake(snake);
+    score.innerHTML = snake.points;
 
     requestAnimationFrame( () => {renderScreen(snake, show)} );
 }
