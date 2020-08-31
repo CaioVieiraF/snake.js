@@ -1,0 +1,12 @@
+
+body {
+    background-color: #242734;
+}
+
+canvas {
+    display: block;
+    background-color: #aaa;
+    border-radius: 0.4rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
