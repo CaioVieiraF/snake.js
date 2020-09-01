@@ -3,34 +3,42 @@
 const canvas = document.querySelector('canvas');
 const screen = canvas.getContext("2d");
 
+// get the score counter
 const score = document.getElementById("points");
 
 // set the grid's square size and declare the positions
 const pixel = 20;
 let gridPos = [];
 
+// set a direction for the snake to folow
 let direction = [-1, 0];
 
 // set a function for a given key pressed
 const keys = {
     'ArrowUp': player => {
-        direction = [0, 1];
+        if (direction[1] != -1){
+            direction = [0, 1];
+        }
     },
     'ArrowDown': player => {
-        direction = [0, -1];
+        if (direction[1] != 1) {
+            direction = [0, -1];
+        }
     },
     'ArrowLeft': player => {
-        direction = [1, 0];
+        if (direction[0] != -1) {
+            direction = [1, 0];
+        }
     },
     'ArrowRight': player => {
-        direction = [-1, 0];
+        if (direction[0] != 1) {
+            direction = [-1, 0];
+        }
     }
 }
 
 
 function main() {
-
-    const showGrid = false;
 
     fillArray();
 
@@ -55,7 +63,7 @@ function main() {
 
     setInterval( () => {moveSnake(snake)}, 80);
 
-    renderScreen(snake, showGrid, fruit);
+    renderScreen(snake, fruit);
 
 }
 
@@ -68,24 +76,26 @@ function fillArray() {
 
 // renders the snake
 function renderSnake(snake) {
-    screen.fillStyle = "green";
+    screen.fillStyle = "blue";
 
     for (let i = 0; i < snake.x.length; i++) {
+        if (i > 0) {
+            screen.fillStyle = "green";
+        }
         screen.fillRect(snake.x[i], snake.y[i], pixel, pixel);
     }
 }
 
 // wrap all rendering functions
-function renderScreen( snake, show, fruit ) {
+function renderScreen( snake, fruit ) {
     screen.clearRect(0, 0, canvas.width, canvas.height);
 
-    renderGrid(show);
     renderSnake(snake);
     score.innerHTML = snake.points;
 
     handleFruit(fruit, snake);
 
-    requestAnimationFrame( () => {renderScreen(snake, show, fruit)} );
+    requestAnimationFrame( () => {renderScreen(snake, fruit)} );
 }
 
 function handleFruit(fruit, snake){
@@ -125,6 +135,12 @@ function moveSnake(snake) {
     snake.x[0] = snake.x[0] + (pixel * direction[0] * -1);
     snake.y[0] = snake.y[0] + (pixel * direction[1] * -1);
 
+    for (let i = 1; i < snake.x.length; i++) {
+        if (snake.x[0] === snake.x[i] && snake.y[0] === snake.y[i]) {
+            gameOver(snake);
+        }
+    }
+
     if (snake.x[0] < 0){
         snake.x[0] = canvas.width - pixel;
     }
@@ -137,6 +153,12 @@ function moveSnake(snake) {
     if (snake.y[0] >= canvas.height){
         snake.y[0] = 0;
     }
+}
+
+function gameOver( snake, fruit ) {
+    snake.points = 0;
+    snake.x = [gridPos[Math.floor(Math.random() * gridPos.length)][0]];
+    snake.y = [gridPos[Math.floor(Math.random() * gridPos.length)][1]];
 }
 
 main();
