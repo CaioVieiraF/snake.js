@@ -24,11 +24,6 @@ const keys = {
     },
     'ArrowRight': player => {
         direction = [-1, 0];
-    },
-    'c': (player) => {
-        player.points += 1;
-        player.x.push(player.x[player.x.length-1] + (direction[0] * pixel));
-        player.y.push(player.y[player.y.length-1] + (direction[1] * pixel));
     }
 }
 
@@ -60,7 +55,7 @@ function main() {
 
     setInterval( () => {moveSnake(snake)}, 80);
 
-    renderScreen(snake, showGrid);
+    renderScreen(snake, showGrid, fruit);
 
 }
 
@@ -69,27 +64,6 @@ function fillArray() {
     for (let i = 0;i < canvas.width; i+=pixel) {
         gridPos.push([i, i]);
     }
-}
-
-// this function renders a grid for debugging
-function renderGrid( show ){
-
-    if (!show) {
-        return;
-    }
-
-    for (let i = 0;i < gridPos.length; i++) {
-        // horizontal lines
-        screen.moveTo(0, gridPos[i][0]);
-        screen.lineTo(canvas.width, gridPos[i][0]);
-        screen.stroke();
-
-        // vertical lines
-        screen.moveTo(gridPos[i][1], 0);
-        screen.lineTo(gridPos[i][1], canvas.height);
-        screen.stroke();
-    }
-
 }
 
 // renders the snake
@@ -102,14 +76,31 @@ function renderSnake(snake) {
 }
 
 // wrap all rendering functions
-function renderScreen( snake, show ) {
+function renderScreen( snake, show, fruit ) {
     screen.clearRect(0, 0, canvas.width, canvas.height);
 
     renderGrid(show);
     renderSnake(snake);
     score.innerHTML = snake.points;
 
-    requestAnimationFrame( () => {renderScreen(snake, show)} );
+    handleFruit(fruit, snake);
+
+    requestAnimationFrame( () => {renderScreen(snake, show, fruit)} );
+}
+
+function handleFruit(fruit, snake){
+
+    if (snake.x[0] === fruit.x && snake.y[0] === fruit.y) {
+        snake.points += 1;
+        fruit.x = gridPos[Math.floor(Math.random() * gridPos.length)][0];
+        fruit.y = gridPos[Math.floor(Math.random() * gridPos.length)][1];
+
+        snake.x.push(snake.x[snake.x.length-1] + (direction[0] * pixel));
+        snake.y.push(snake.y[snake.y.length-1] + (direction[1] * pixel));
+    }
+
+    screen.fillStyle = "red";
+    screen.fillRect(fruit.x, fruit.y, pixel, pixel);
 }
 
 // handle any key that gets pressed
